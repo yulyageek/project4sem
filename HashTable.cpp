@@ -48,9 +48,6 @@ void LinkedList::Insert(const string & key){
 	last = last->GetNext();		
 }
 
-Node * LinkedList::GetHead(){
-	return head;
-}
 
 void LinkedList::Delete(const string & key){
 	Node *crt = head;
@@ -107,6 +104,6 @@ int HashTable::Size() const{
 	return size;
 }
 
-HashTable::LinkedList* Table() const{
+LinkedList* HashTable::Table() const{
 	return table;
 }
