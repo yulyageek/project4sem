@@ -1,4 +1,7 @@
+#include <iostream>
 #include "HashTable.h"
+
+using namespace std;
 
 Node::Node(){
 	next = NULL;
@@ -66,8 +69,8 @@ void LinkedList::Delete(const string & key){
 
 HashTable::HashTable(const int & sz, int (*hf)(const string &)){
 	if (sz <= 0){
-		error = INVARG;
-		Error(error);
+		/*error = INVARG;
+		Error(error);*/
 	}
 	else {	
 		HashFunction = hf;

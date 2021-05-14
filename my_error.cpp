@@ -1,9 +1,6 @@
+#include <iostream>
+#include "error.h"
 using namespace std;
-
-typedef enum{
-	INVARG = 0,
-	OOM
-}ErrorType;
 
 string errorMsg =
 {

@@ -1,3 +1,4 @@
+#include <error.h>
 using namespace std;
 
 typedef enum{
@@ -5,7 +6,7 @@ typedef enum{
 	OOM
 }ErrorType;
 
-string errorMsg =
+string errorMsg[] =
 {
     "Неверный аргумент", "Ошибка при выделении памяти"
 };
