@@ -65,3 +65,48 @@ void LinkedList::Delete(const string & key){
 		cout << endl;
 	}
 }
+
+
+HashTable::HashTable(const int & sz, int (*hf)(const string &)){
+	if (sz <= 0){
+		error = INVARG;
+		Error(error);
+	}
+	else {	
+		HashFunction = hf;
+		table = new LinkedList[sz]();
+		if (table == NULL){
+			//error;
+		}
+		size = sz;
+	}
+}
+
+HashTable::~HashTable(){
+	delete [] table;
+}	
+
+void HashTable::Insert(const string & key){
+	int hash = HashFunction(key) % size;
+	table[hash].Insert(key);
+}
+
+bool HashTable::Find(const string & s) const{
+	int hash = HashFunction(s) % size;
+	return table[hash].Find(s);
+}
+
+void HashTable::Delete(const string & s){
+	int hash = HashFunction(s) % size;
+	if ( table[hash].Find(s) == 1){
+		table[hash].Delete(s);
+	}
+}
+
+int HashTable::Size() const{
+	return size;
+}
+
+HashTable::LinkedList* Table() const{
+	return table;
+}
