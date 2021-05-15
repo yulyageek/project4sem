@@ -14,6 +14,7 @@ int MyHash(const string & x){
 }
 
 int main(){
-	HashTable T(5, MyHash);
+	HashTable T{5, MyHash};
+	T.Insert("test_insert");
 	return 0;
 }

@@ -1,10 +1,17 @@
 using namespace std;
 
+typedef enum{
+	INVARG = 0,
+	OOM
+}ErrorType;
+
+void Error(ErrorType error);
+
 class Node{
 private:
 	string value;
 	Node * next;
-	//ErrorType error;
+	ErrorType error;
 public:
 	Node();
 	Node( const string & key );
@@ -24,7 +31,7 @@ public:
 private:
 	Node * last;
 	Node * head;
-	//ErrorType error;
+	ErrorType error;
 };
 
 class HashTable{
@@ -39,7 +46,7 @@ LinkedList* Table() const;
 
 private:
 	int (*HashFunction)(const string &);
-	//ErrorType error;
+	ErrorType error;
 	LinkedList* table;
 	int size = 0;
 };
