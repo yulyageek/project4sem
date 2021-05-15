@@ -110,3 +110,16 @@ int HashTable::Size() const{
 LinkedList* HashTable::Table() const{
 	return table;
 }
+
+ostream & operator << (ostream & s, const HashTable & T){
+        for (int i=0; i<T.Size(); ++i){
+                Node *crt = T.Table()[i].GetHead();
+                        while(crt != NULL){
+                                s << crt->GetValue() << " ";
+                                crt = crt->GetNext();
+                        }
+                        s << endl;
+        }
+        return s;
+}
+

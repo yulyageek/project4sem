@@ -16,5 +16,7 @@ int MyHash(const string & x){
 int main(){
 	HashTable T{5, MyHash};
 	T.Insert("test_insert");
+	T.Delete("test_insert");
+	HashTable A{-2, MyHash};
 	return 0;
 }
