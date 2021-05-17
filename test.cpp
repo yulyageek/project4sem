@@ -22,7 +22,7 @@ int main(){
 	cout << T;
 	T.Delete("include");
 	T.Insert("result");
-	
+	T.Delete("result");
 	if (T.Size() == 5){
 		cout << "size test done" << endl;
 	}
