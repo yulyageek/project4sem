@@ -14,9 +14,22 @@ int MyHash(const string & x){
 }
 
 int main(){
-	HashTable T{5, MyHash};
-	T.Insert("test_insert");
-	T.Delete("test_insert");
-	HashTable A{-2, MyHash};
+	HashTable T(5, MyHash);
+	T.Insert("word");
+	T.Insert("namespace");
+	T.Insert("include");
+	T.Insert("hash");
+	cout << T;
+	T.Delete("include");
+	T.Insert("result");
+	
+	if (T.Size() == 5){
+		cout << "size test done" << endl;
+	}
+	if (T.Find("word") == 1 and T.Find("table") == 0){
+		cout << "find test done" << endl;
+	}
+	HashTable A(-2, MyHash);
+	cout << T;
 	return 0;
 }
