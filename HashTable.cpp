@@ -54,17 +54,21 @@ void LinkedList::Insert(const string & key){
 void LinkedList::Delete(const string & key){
 	Node *crt = head;
 	Node * crt_;
-	while(crt->GetNext() != NULL){
-		if ((crt->GetNext())->GetValue() == key){
+	while(crt->GetNext()!= NULL){
+		if (crt->GetNext()->GetValue() == key){
 			crt_ = crt->GetNext();
 			crt->SetNext(crt_->GetNext());
 			delete crt_;
 			crt = crt->GetNext();
+			if (crt == NULL)
+				break;
 		}
-		cout << endl;
+		else{
+			crt = crt->GetNext();
+		}
 	}
-}
 
+}
 
 HashTable::HashTable(const int & sz, int (*hf)(const string &)){
 	if (sz <= 0){
@@ -119,14 +123,18 @@ LinkedList* HashTable::Table() const{
 }
 
 ostream & operator << (ostream & s, const HashTable & T){
+	cout << "    HashTable:" << endl;
+	cout << "-------------------------------------------------------------------" << endl;
         for (int i=0; i<T.Size(); ++i){
                 Node *crt = T.Table()[i].GetHead();
+		crt = crt->GetNext();
                         while(crt != NULL){
                                 s << crt->GetValue() << " ";
                                 crt = crt->GetNext();
                         }
                         s << endl;
         }
+	cout << "-------------------------------------------------------------------" << endl;
         return s;
 }
 

@@ -21,6 +21,7 @@ public:
 	bool Find(const string & key);
 	void Insert(const string & key);
 	void Delete(const string & key);
+	Node * GetHead();
 
 private:
 	Node * last;
@@ -30,13 +31,13 @@ private:
 
 class HashTable{
 public:
-HashTable(const int &, int (*)(const string &));
-~HashTable();	
-void Insert(const string & );
-bool Find(const string &) const;
-void Delete(const string & );
-int Size() const;
-LinkedList* Table() const;
+	HashTable(const int &, int (*)(const string &));
+	~HashTable();	
+	void Insert(const string & );
+	bool Find(const string &) const;
+	void Delete(const string & );
+	int Size() const;
+	LinkedList* Table() const;
 
 private:
 	int (*HashFunction)(const string &);
@@ -44,4 +45,6 @@ private:
 	LinkedList* table;
 	int size = 0;
 };
+
+ostream & operator << (ostream &, const HashTable &);
 
