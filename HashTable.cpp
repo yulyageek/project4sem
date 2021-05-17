@@ -70,6 +70,7 @@ HashTable::HashTable(const int & sz, int (*hf)(const string &)){
 	if (sz <= 0){
 		error = INVARG;
 		Error(error);
+		table = NULL;
 	}
 	else {	
 		HashFunction = hf;
@@ -83,12 +84,18 @@ HashTable::HashTable(const int & sz, int (*hf)(const string &)){
 }
 
 HashTable::~HashTable(){
-	delete [] table;
+	if (table != NULL){
+		delete [] table;
+	}
 }	
 
 void HashTable::Insert(const string & key){
 	int hash = HashFunction(key) % size;
 	table[hash].Insert(key);
+}
+
+Node * LinkedList::GetHead(){
+	return head;
 }
 
 bool HashTable::Find(const string & s) const{
