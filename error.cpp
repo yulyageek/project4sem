@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-string errorMsg =
+string errorMsg[] =
 {
     "Неверный аргумент", "Ошибка при выделении памяти"
 };
