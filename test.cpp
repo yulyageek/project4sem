@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <exception>
 #include "HashTable.h"
 
 using namespace std;
@@ -14,6 +15,17 @@ int MyHash(const string & x){
 }
 
 int main(){
+	try{
+		HashTable T(-5, MyHash);
+	} catch (ErrorType error){
+		Error(error); 
+	}
+
+	try{
+		HashTable T(5, MyHash);
+	} catch (ErrorType error){
+		Error(error); 
+	}
 	HashTable T(5, MyHash);
 	T.Insert("word");
 	T.Insert("namespace");
@@ -29,7 +41,6 @@ int main(){
 	if (T.Find("word") == 1 and T.Find("table") == 0){
 		cout << "find test done" << endl;
 	}
-	HashTable A(-2, MyHash);
 	cout << T;
 	return 0;
 }
