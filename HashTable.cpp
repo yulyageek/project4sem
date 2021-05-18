@@ -71,18 +71,11 @@ void LinkedList::Delete(const string & key){
 }
 
 HashTable::HashTable(const int & sz, int (*hf)(const string &)){
-	if (sz <= 0){
-		error = INVARG;
-		Error(error);
-		table = NULL;
-	}
+	if (sz <= 0) throw INVARG;
 	else {	
 		HashFunction = hf;
 		table = new LinkedList[sz]();
-		if (table == NULL){
-			error = OOM;
-			Error(error);
-		}
+		if (table == NULL) throw OOM;
 		size = sz;
 	}
 }
