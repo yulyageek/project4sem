@@ -1,49 +1,53 @@
 #include "error.h"
 using namespace std;
 
+template <typename T> 
 class Node{
 private:
-	string value;
-	Node * next;
+	T value;
+	Node<T> * next;
 
 public:
 	Node();
-	Node( const string & key );
-	string GetValue() const;
-	void SetNext(Node * ptr);
-	Node *GetNext() const;
+	Node( const T & key );
+	T GetValue() const;
+	void SetNext(Node<T> * ptr);
+	Node<T> *GetNext() const;
 };
 
+template <typename T>
 class LinkedList{
 public:
 	LinkedList();
 	~LinkedList();
-	bool Find(const string & key);
-	void Insert(const string & key);
-	void Delete(const string & key);
-	Node * GetHead();
+	bool Find(const T & key);
+	void Insert(const T & key);
+	void Delete(const T & key);
+	Node<T> * GetHead();
 
 private:
-	Node * last;
-	Node * head;
+	Node<T> * last;
+	Node<T> * head;
 
 };
 
+template <typename T>
 class HashTable{
 public:
-	HashTable(const int &, int (*)(const string &));
+	HashTable(const int &, int (*)(const T &));
 	~HashTable();	
-	void Insert(const string & );
-	bool Find(const string &) const;
-	void Delete(const string & );
+	void Insert(const T & );
+	bool Find(const T &) const;
+	void Delete(const T & );
 	int Size() const;
-	LinkedList* Table() const;
+	LinkedList<T>* Table() const;
 
 private:
-	int (*HashFunction)(const string &);
-	LinkedList* table;
+	int (*HashFunction)(const T &);
+	LinkedList<T>* table;
 	int size = 0;
 };
 
-ostream & operator << (ostream &, const HashTable &);
+template <typename T>
+ostream & operator << (ostream &, const HashTable<T> &);
 

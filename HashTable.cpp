@@ -2,31 +2,42 @@
 #include "HashTable.h"
 using namespace std;
 
-Node::Node(){
+template <typename T>
+Node<T>::Node(){
 	next = NULL;
 }
-Node::Node( const string & key ){
+
+template <typename T>
+Node<T>::Node( const T & key ){
 	value = key;
 	next = NULL;
 }
-string Node::GetValue() const {
+
+template <typename T>
+T Node<T>::GetValue() const {
 	return value;
 }
-void Node::SetNext(Node * ptr) {
+
+template <typename T>
+void Node<T>::SetNext(Node * ptr) {
 	next = ptr;
 }
-Node * Node::GetNext() const {
+
+template <typename T>
+Node<T> * Node<T>::GetNext() const {
 	return next;
 }
 
-LinkedList::LinkedList(){
-	head = new Node();
+template <typename T>
+LinkedList<T>::LinkedList(){
+	head = new Node<T>();
 	last = head;
 }
 
-LinkedList::~LinkedList(){
-	Node * crt = head;
-	Node * crt_;
+template <typename T>
+LinkedList<T>::~LinkedList(){
+	Node<T> * crt = head;
+	Node<T> * crt_;
 	while(crt != NULL){
 		crt_ = crt->GetNext();
 		delete crt;
@@ -34,8 +45,9 @@ LinkedList::~LinkedList(){
 	}
 }
 
-bool LinkedList::Find(const string & key){
-	Node * crt = head;
+template <typename T>
+bool LinkedList<T>::Find(const T & key){
+	Node<T> * crt = head;
 	while(crt != NULL){
 		if (crt->GetValue() == key){
 		  return true;
@@ -45,15 +57,16 @@ bool LinkedList::Find(const string & key){
 	return false;
 }
 
-void LinkedList::Insert(const string & key){
-	last->SetNext(new Node(key));
+template <typename T>
+void LinkedList<T>::Insert(const T & key){
+	last->SetNext(new Node<T>(key));
 	last = last->GetNext();		
 }
 
-
-void LinkedList::Delete(const string & key){
-	Node *crt = head;
-	Node * crt_;
+template <typename T>
+void LinkedList<T>::Delete(const T & key){
+	Node<T> *crt = head;
+	Node<T> * crt_;
 	while(crt->GetNext()!= NULL){
 		if (crt->GetNext()->GetValue() == key){
 			crt_ = crt->GetNext();
@@ -70,56 +83,65 @@ void LinkedList::Delete(const string & key){
 
 }
 
-HashTable::HashTable(const int & sz, int (*hf)(const string &)){
+template <typename T>
+HashTable<T>::HashTable(const int & sz, int (*hf)(const T &)){
 	if (sz <= 0) throw INVARG;
 	else {	
 		HashFunction = hf;
-		table = new LinkedList[sz]();
+		table = new LinkedList<T>[sz]();
 		if (table == NULL) throw OOM;
 		size = sz;
 	}
 }
 
-HashTable::~HashTable(){
+template <typename T>
+HashTable<T>::~HashTable(){
 	if (table != NULL){
 		delete [] table;
 	}
 }	
 
-void HashTable::Insert(const string & key){
+template <typename T>
+void HashTable<T>::Insert(const T & key){
 	int hash = HashFunction(key) % size;
 	table[hash].Insert(key);
 }
 
-Node * LinkedList::GetHead(){
+template <typename T>
+Node<T> * LinkedList<T>::GetHead(){
 	return head;
 }
 
-bool HashTable::Find(const string & s) const{
+template <typename T>
+bool HashTable<T>::Find(const T & s) const{
 	int hash = HashFunction(s) % size;
 	return table[hash].Find(s);
 }
 
-void HashTable::Delete(const string & s){
+template <typename T>
+void HashTable<T>::Delete(const T & s){
 	int hash = HashFunction(s) % size;
 	if ( table[hash].Find(s) == 1){
 		table[hash].Delete(s);
 	}
 }
 
-int HashTable::Size() const{
+template <typename T>
+int HashTable<T>::Size() const{
 	return size;
 }
 
-LinkedList* HashTable::Table() const{
+template <typename T>
+LinkedList<T>* HashTable<T>::Table() const{
 	return table;
 }
 
-ostream & operator << (ostream & s, const HashTable & T){
+template <typename T>
+ostream & operator << (ostream & s, const HashTable<T> & t){
 	cout << "    HashTable:" << endl;
 	cout << "-------------------------------------------------------------------" << endl;
-        for (int i=0; i<T.Size(); ++i){
-                Node *crt = T.Table()[i].GetHead();
+        for (int i=0; i<t.Size(); ++i){
+                Node<T> *crt = t.Table()[i].GetHead();
 		crt = crt->GetNext();
                         while(crt != NULL){
                                 s << crt->GetValue() << " ";
