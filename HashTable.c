@@ -18,22 +18,30 @@ int Hash_Function(char *word, int size){
 
 Table * init_Hash_Table(int size, HT_ERR * err){
 	if (size <= 0){
-		perror("SIZE 0!");
-		*err = 1;
-		return NULL;
+		if ( err != NULL ){
+			perror("SIZE!");
+			*err = INVARG;
+			return NULL;
+		}
 	}
 	Table *t;
 	t = (Table *) malloc (sizeof(Table));
 	if (t == NULL){
-		perror("Malloc error");
-		*err = 3;
+		if ( err != NULL ){
+			perror("Malloc error");
+			*err = OOM;
+		}
 	}
 	if (t != NULL){
 		t->size = size;
 		t->head = (chain **) malloc (size * sizeof(chain *));
 		if (t->head == NULL){
 			perror("Malloc error");
-			*err = 3;
+			if  ( err != NULL ){
+				*err = OOM;
+			}
+			free(t);
+			return NULL;
 		}
 		for (int i=0; i<size; i++){
 			chain * new = (chain *) malloc (sizeof(chain));
@@ -42,18 +50,17 @@ Table * init_Hash_Table(int size, HT_ERR * err){
 			new->value = NULL;
 			new->next = (chain*) NULL;
 		}
-		/*for (int i=0; i<size; i++){
-			chain * crt = (t->head)[i];
-			printf("%s\n", crt->value );
-		}*/
+	}
+	if (err != NULL){
+		*err = SUCCESS;
 	}
 	return t;
 }
 
 chain* Search(char* word, Table *t, HT_ERR * err){
 	if (t == NULL){
-		perror(" ");
-		*err = 1;
+		perror("pointer null");
+		*err = INVARG;
 		return NULL;
 	}
 	int index;
@@ -70,20 +77,24 @@ chain* Search(char* word, Table *t, HT_ERR * err){
 			break;		
 		}
 	}
+	if (err != NULL){
+		*err = SUCCESS;
+	}
 	return NULL;
 }
 
 void add_new(char* word, Table *t, HT_ERR * err){
 	if (t == NULL){
-		printf("NULL");
-		*err = 1;
+		perror("pointer null");
+		if (err != NULL){
+			*err = INVARG;
+		}
 		return;
 	}
 	int index;
 	index = Hash_Function(word, t->size);
 	chain * crt = (t->head)[index];
 	if (crt->value == NULL){
-		//crt->value = (char*) malloc (256*sizeof(char));
 		crt->value = word;
 		crt->next = NULL;
 	}
@@ -91,17 +102,31 @@ void add_new(char* word, Table *t, HT_ERR * err){
 		while (crt->next != NULL){
 			crt = crt->next;
 		}
-		crt->next = (chain*) malloc (sizeof(chain)) ;
-		crt->next->prev = crt;
-		crt->next->value = word;
-		crt->next->next = NULL;
+		chain * new = (chain*) malloc (sizeof(chain));
+		if (new == NULL ){
+			if (err != NULL ){
+				*err = OOM;
+				return;
+			}
+		}
+		else{
+			new->next = NULL;
+			new->value = word;
+			new->prev = crt;
+			crt->next = new;
+		}
+	}
+	if (err != NULL){
+		*err = SUCCESS;
 	}
 }
 
 _Bool Delete(char* word, Table *t, HT_ERR * err){
 	if (t == NULL){
-		perror(" ");
-		*err = 1;
+		perror("pointer null");
+		if (err != NULL){
+			*err = INVARG;
+		}
 		return 0;
 	}
 	chain * p;
@@ -120,43 +145,60 @@ _Bool Delete(char* word, Table *t, HT_ERR * err){
 		}
 		if (p_next == NULL && p_prev != NULL){  //последний
 			p_prev->next = NULL;
+			printf("%p\n", p);
+			free(p);
 			//return 1;
 		}
 		if (p_next != NULL && p_prev == NULL){  //первый
 			p->value = p_next->value;
 			p->next = p_next->next;
+			free(p_next);
 			//return 1;
 		}
 		if (p_next != NULL && p_prev != NULL){  //по середине
 			p_prev->next = p_next;
 			p_next->prev = p_prev;
+			printf("%p\n", p);
+			free(p);
 			//return 1;
 		}		
+	}
+	if (err != NULL){
+		*err = SUCCESS;
 	}
 	return 1;	
 }
 
 void print_Table(Table * t, HT_ERR * err){
 	if (t == NULL){
-		perror(" ");
-		*err = 1;
+		perror("pointer null");
+		if (err != NULL){
+			*err = INVARG;
+		}		
+		return;
 	}
 	printf("      Hash Table:\n");
 	for (int i=0; i<t->size; i++){
 		chain * crt = (t->head)[i];
 		printf("%d", i);
 		while (crt != NULL){
-			printf("\t%s\n", crt->value );
+			printf("\t%s\n", crt->value);
 			crt = crt->next;
 		}
 		
+	}
+	if (err != NULL){
+		*err = SUCCESS;
 	}
 }
 
 void remove_Table(Table * t, HT_ERR * err){
 	if (t == NULL){
-		perror(" ");
-		*err = 1;
+		perror("pointer null");
+		if (err != NULL){
+			*err = INVARG;
+		}
+		return;
 	}
 	for (int i=0; i<t->size; i++){
 		chain * crt = (t->head)[i];
@@ -164,10 +206,13 @@ void remove_Table(Table * t, HT_ERR * err){
 		while (crt != NULL){
 			crt_ = crt->next;
 			free(crt);
-			crt = crt_; 
+			crt = crt_;
 		}
 		
 	}
 	free(t->head);
 	free(t);
+	if (err != NULL){
+		*err = SUCCESS;
+	}
 }
