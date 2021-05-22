@@ -24,6 +24,10 @@ ostream & operator << (ostream & s, const Complex & x){
         return s;
 }
 
+bool operator == ( const Complex & x, const Complex & y){
+	return (x.re == y.re and x.im == y.im);
+}
+
 
 int MyHashInt(const int & x){
 	return (x*x)%73;
@@ -65,6 +69,8 @@ int main(){
 		HashTable<Complex> T(4, MyHashComplex);
 		T.Insert(Complex{1, 2});
 		T.Insert(Complex{2, 4});
+		if ( T.Find(Complex{2, 4}) == 1) cout << "succses" << endl;
+		T.Delete(Complex{2, 4});
 		cout << T;
 	} catch (ErrorType error){
 		Error(error); 
