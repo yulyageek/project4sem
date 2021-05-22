@@ -38,7 +38,7 @@ int MyHashComplex(const Complex & x){
 }
 
 int main(){
-	/*try{
+	try{
 		HashTable<string> T(5, MyHashString);
 		T.Insert("word");
 		T.Insert("namespace");
@@ -64,7 +64,7 @@ int main(){
 		T.Insert(14);
 	} catch (ErrorType error){
 		Error(error); 
-	}*/
+	}
 	try{
 		HashTable<Complex> T(4, MyHashComplex);
 		T.Insert(Complex{1, 2});
@@ -72,6 +72,8 @@ int main(){
 		if ( T.Find(Complex{2, 4}) == 1) cout << "succses" << endl;
 		T.Delete(Complex{2, 4});
 		cout << T;
+		int (*t)(const Complex &) = T.GetHashFunction();
+		if ( t(Complex{2, 4}) == MyHashComplex(Complex{2, 4}) ) cout << "вроде нормально" << endl;
 	} catch (ErrorType error){
 		Error(error); 
 	}
