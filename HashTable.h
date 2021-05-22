@@ -5,11 +5,9 @@ struct chain{
 };
 
 typedef enum {
-	ST_ERR_SUCCESS = 0,
-	ST_ERR_INVARG,
-	ST_ERR_EMPTY,
-	ST_ERR_OOM,
-	ST_ERR_FULL
+	SUCCESS = 0,
+	INVARG,
+	OOM
 }HT_ERR;
 
 typedef struct chain chain;
