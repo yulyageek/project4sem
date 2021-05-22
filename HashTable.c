@@ -5,6 +5,9 @@
 #include "HashTable.h"
 
 int Hash_Function(char *word, int size){
+	if (word == NULL){
+		return -1;
+	}
 	int len = strlen(word);
 	int result = 0;
 	char s;
@@ -21,8 +24,8 @@ Table * init_Hash_Table(int size, HT_ERR * err){
 		if ( err != NULL ){
 			perror("SIZE!");
 			*err = INVARG;
-			return NULL;
 		}
+		return NULL;
 	}
 	Table *t;
 	t = (Table *) malloc (sizeof(Table));
@@ -60,27 +63,37 @@ Table * init_Hash_Table(int size, HT_ERR * err){
 chain* Search(char* word, Table *t, HT_ERR * err){
 	if (t == NULL){
 		perror("pointer null");
-		*err = INVARG;
+		if (err != NULL){
+			*err = INVARG;
+		}
 		return NULL;
 	}
 	int index;
 	index = Hash_Function(word, t->size);
-	chain * crt = (t->head)[index];
-	while(crt->value != NULL){
-		if (strcmp(crt->value, word) == 0){
-			return crt;
+	if (index == -1){
+		if (err != NULL){
+			*err = INVARG;
 		}
-		if (crt->next != NULL){
-			crt = crt->next;
-		}
-		else {
-			break;		
-		}
+		return NULL;
 	}
-	if (err != NULL){
-		*err = SUCCESS;
+	else{
+		chain * crt = (t->head)[index];
+		while(crt->value != NULL){
+			if (strcmp(crt->value, word) == 0){
+				return crt;
+			}
+			if (crt->next != NULL){
+				crt = crt->next;
+			}
+			else {
+				break;		
+			}
+		}
+		if (err != NULL){
+			*err = SUCCESS;
+		}
+		return NULL;	
 	}
-	return NULL;
 }
 
 void add_new(char* word, Table *t, HT_ERR * err){
@@ -93,31 +106,38 @@ void add_new(char* word, Table *t, HT_ERR * err){
 	}
 	int index;
 	index = Hash_Function(word, t->size);
-	chain * crt = (t->head)[index];
-	if (crt->value == NULL){
-		crt->value = word;
-		crt->next = NULL;
-	}
-	else {
-		while (crt->next != NULL){
-			crt = crt->next;
+	if (index == -1){
+		if (err != NULL){
+			*err = INVARG;
 		}
-		chain * new = (chain*) malloc (sizeof(chain));
-		if (new == NULL ){
-			if (err != NULL ){
-				*err = OOM;
-				return;
+	}
+	else{
+		chain * crt = (t->head)[index];
+		if (crt->value == NULL){
+			crt->value = word;
+			crt->next = NULL;
+		}
+		else {
+			while (crt->next != NULL){
+				crt = crt->next;
+			}
+			chain * new = (chain*) malloc (sizeof(chain));
+			if (new == NULL ){
+				if (err != NULL ){
+					*err = OOM;
+					return;
+				}
+			}
+			else{
+				new->next = NULL;
+				new->value = word;
+				new->prev = crt;
+				crt->next = new;
 			}
 		}
-		else{
-			new->next = NULL;
-			new->value = word;
-			new->prev = crt;
-			crt->next = new;
+		if (err != NULL){
+			*err = SUCCESS;
 		}
-	}
-	if (err != NULL){
-		*err = SUCCESS;
 	}
 }
 
@@ -145,7 +165,6 @@ _Bool Delete(char* word, Table *t, HT_ERR * err){
 		}
 		if (p_next == NULL && p_prev != NULL){  //последний
 			p_prev->next = NULL;
-			printf("%p\n", p);
 			free(p);
 			//return 1;
 		}
@@ -158,7 +177,6 @@ _Bool Delete(char* word, Table *t, HT_ERR * err){
 		if (p_next != NULL && p_prev != NULL){  //по середине
 			p_prev->next = p_next;
 			p_next->prev = p_prev;
-			printf("%p\n", p);
 			free(p);
 			//return 1;
 		}		
