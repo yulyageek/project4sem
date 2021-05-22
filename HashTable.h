@@ -41,6 +41,7 @@ public:
 	void Delete(const T & );
 	int Size() const;
 	LinkedList<T>* Table() const;
+	int (*GetHashFunction())(const T &);
 
 private:
 	int (*HashFunction)(const T &);

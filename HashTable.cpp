@@ -99,6 +99,11 @@ HashTable<T>::~HashTable(){
 	if (table != NULL){
 		delete [] table;
 	}
+}
+
+template <typename T>
+int (*HashTable<T>::GetHashFunction())(const T &) {
+	return HashFunction;
 }	
 
 template <typename T>
@@ -152,4 +157,14 @@ ostream & operator << (ostream & s, const HashTable<T> & t){
 	cout << "-------------------------------------------------------------------" << endl;
         return s;
 }
+
+/*template <typename T>
+operator = (const HashTable<T> & t){
+	m_data = new T [s.size()];
+	m_size = s.size();
+	m_current_size = s.current_size();
+	for (int i = 0; i < m_current_size; i++)
+		m_data[i] = s.data()[i];
+	return *this;
+}*/
 
