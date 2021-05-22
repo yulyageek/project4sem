@@ -24,6 +24,8 @@ int main(){
 	add_new(NULL, t, &err);
 	if (err == INVARG) printf("add NULL test done\n");
 	add_new("error", t, &err);
+	add_new("", t, &err);
+	if ( err == SUCCESS) printf("add empty test done\n");
 	add_new("aaaa", t, &err);
 	add_new("aabb", t, &err);
 	print_Table(t, &err);
