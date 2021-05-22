@@ -4,6 +4,12 @@
 
 using namespace std;
 
+struct Complex{
+ int re;
+ int im;
+};
+typedef struct Complex Complex;
+
 int MyHashString(const string & x){
 	int len = x.size();
 	int result = 0;
@@ -13,13 +19,22 @@ int MyHashString(const string & x){
 	return result;
 }
 
+ostream & operator << (ostream & s, const Complex & x){
+	cout << x.re << " + " << x.im << "i";
+        return s;
+}
+
+
 int MyHashInt(const int & x){
 	return (x*x)%73;
 }
 
+int MyHashComplex(const Complex & x){
+	return (x.re+x.im)%73;
+}
 
 int main(){
-	try{
+	/*try{
 		HashTable<string> T(5, MyHashString);
 		T.Insert("word");
 		T.Insert("namespace");
@@ -43,6 +58,14 @@ int main(){
 		HashTable<int> T(-4, MyHashInt);
 		T.Insert(125);
 		T.Insert(14);
+	} catch (ErrorType error){
+		Error(error); 
+	}*/
+	try{
+		HashTable<Complex> T(4, MyHashComplex);
+		T.Insert(Complex{1, 2});
+		T.Insert(Complex{2, 4});
+		cout << T;
 	} catch (ErrorType error){
 		Error(error); 
 	}
