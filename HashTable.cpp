@@ -48,6 +48,7 @@ LinkedList<T>::~LinkedList(){
 template <typename T>
 bool LinkedList<T>::Find(const T & key){
 	Node<T> * crt = head;
+	crt = crt->GetNext();
 	while(crt != NULL){
 		if (crt->GetValue() == key){
 		  return true;
@@ -86,12 +87,28 @@ void LinkedList<T>::Delete(const T & key){
 template <typename T>
 HashTable<T>::HashTable(const int & sz, int (*hf)(const T &)){
 	if (sz <= 0) throw INVARG;
+	if (hf == NULL) throw INVARG;
 	else {	
 		HashFunction = hf;
 		table = new LinkedList<T>[sz]();
-		if (table == NULL) throw OOM;
 		size = sz;
 	}
+}
+
+template <class T> 
+HashTable<T>::HashTable(const HashTable<T> & t)  //конструктор копирования
+{
+	table = new LinkedList<T>[t.Size()]();
+	//HashFunction = t.GetHashFunction();
+	size = t.Size();
+	for (int i=0; i<size; ++i){
+                Node<T> *crt = t.Table()[i].GetHead();
+		crt = crt->GetNext();
+                        while(crt != NULL){
+                                table[i].Insert(crt->GetValue());
+				crt = crt->GetNext();	    
+                        }
+        }	
 }
 
 template <typename T>
@@ -99,17 +116,19 @@ HashTable<T>::~HashTable(){
 	if (table != NULL){
 		delete [] table;
 	}
+	table = NULL;
 }
 
 template <typename T>
-int (*HashTable<T>::GetHashFunction())(const T &) {
+int (* HashTable<T>::GetHashFunction())(const T &) {
 	return HashFunction;
-}	
+}
 
 template <typename T>
 void HashTable<T>::Insert(const T & key){
-	int hash = HashFunction(key) % size;
-	table[hash].Insert(key);
+	int hash = HashFunction(key);
+	if (hash == -1) throw INVARG;
+	table[hash%size].Insert(key);
 }
 
 template <typename T>
@@ -119,15 +138,17 @@ Node<T> * LinkedList<T>::GetHead(){
 
 template <typename T>
 bool HashTable<T>::Find(const T & s) const{
-	int hash = HashFunction(s) % size;
-	return table[hash].Find(s);
+	int hash = HashFunction(s);
+	if (hash == -1) throw INVARG;
+	return table[hash%size].Find(s);
 }
 
 template <typename T>
 void HashTable<T>::Delete(const T & s){
-	int hash = HashFunction(s) % size;
-	if ( table[hash].Find(s) == 1){
-		table[hash].Delete(s);
+	int hash = HashFunction(s);
+	if (hash == -1) throw INVARG;
+	if ( table[hash%size].Find(s) == 1){
+		table[hash%size].Delete(s);
 	}
 }
 
@@ -157,14 +178,3 @@ ostream & operator << (ostream & s, const HashTable<T> & t){
 	cout << "-------------------------------------------------------------------" << endl;
         return s;
 }
-
-/*template <typename T>
-operator = (const HashTable<T> & t){
-	m_data = new T [s.size()];
-	m_size = s.size();
-	m_current_size = s.current_size();
-	for (int i = 0; i < m_current_size; i++)
-		m_data[i] = s.data()[i];
-	return *this;
-}*/
-
